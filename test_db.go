@@ -10,7 +10,7 @@ import (
 )
 
 type TestDB struct {
-	db *pgxpool.Pool
+	Pool *pgxpool.Pool
 }
 
 func NewTestDB(dburl string) *TestDB {
@@ -25,7 +25,7 @@ func NewTestDB(dburl string) *TestDB {
 
 	s := &TestDB{}
 
-	s.db, err = pgxpool.Connect(context.Background(), dburl)
+	s.Pool, err = pgxpool.Connect(context.Background(), dburl)
 	if err != nil {
 		panic(err)
 	}
@@ -34,9 +34,9 @@ func NewTestDB(dburl string) *TestDB {
 }
 
 func (s *TestDB) TearDown() {
-	s.db.Close()
+	s.Pool.Close()
 }
 
 func (s *TestDB) QQ(t *testing.T) *QuickQuery {
-	return New(s.db, t)
+	return New(s.Pool, t)
 }
