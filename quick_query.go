@@ -48,6 +48,12 @@ func (qq *QuickQuery) Bool(sql string, args ...interface{}) bool {
 	return x
 }
 
+func (qq *QuickQuery) Time(sql string, args ...interface{}) time.Time {
+	var x time.Time
+	qq.A.NoError(qq.Tx.QueryRow(qq.Ctx, sql, args...).Scan(&x))
+	return x
+}
+
 func (qq *QuickQuery) Int(sql string, args ...interface{}) int {
 	var x int
 	qq.A.NoError(qq.Tx.QueryRow(qq.Ctx, sql, args...).Scan(&x))
