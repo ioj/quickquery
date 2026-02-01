@@ -6,10 +6,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jackc/pgconn"
-	"github.com/jackc/pgtype"
-	"github.com/jackc/pgx/v4"
-	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgconn"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -73,9 +73,9 @@ func (qq *QuickQuery) String(sql string, args ...interface{}) string {
 }
 
 func (qq *QuickQuery) IsNull(sql string, args ...interface{}) {
-	var x pgtype.Bytea
+	var x *string
 	qq.A.NoError(qq.Tx.QueryRow(qq.Ctx, sql, args...).Scan(&x))
-	qq.A.Equal(pgtype.Null, x.Status, fmt.Sprintf("%v is not null", sql))
+	qq.A.Nil(x, fmt.Sprintf("%v is not null", sql))
 }
 
 func (qq *QuickQuery) Exec(sql string, args ...interface{}) {
@@ -83,8 +83,8 @@ func (qq *QuickQuery) Exec(sql string, args ...interface{}) {
 	qq.A.NoError(err, fmt.Sprintf("%v failed", sql))
 }
 
-func (qq *QuickQuery) UUID(sql string, args ...interface{}) pgtype.UUID {
-	var x pgtype.UUID
+func (qq *QuickQuery) UUID(sql string, args ...interface{}) uuid.UUID {
+	var x uuid.UUID
 	qq.A.NoError(qq.Tx.QueryRow(qq.Ctx, sql, args...).Scan(&x))
 	return x
 }

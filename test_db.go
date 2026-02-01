@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type TestDB struct {
@@ -25,7 +25,7 @@ func NewTestDB(dburl string) *TestDB {
 
 	s := &TestDB{}
 
-	s.Pool, err = pgxpool.Connect(context.Background(), dburl)
+	s.Pool, err = pgxpool.New(context.Background(), dburl)
 	if err != nil {
 		panic(err)
 	}
